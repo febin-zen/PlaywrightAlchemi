@@ -19,6 +19,7 @@ async function login(page: Page, email: string, password: string) {
   const submitButton = page.getByTestId("submit-button");
 
   await usernameInput.waitFor({ state: "visible" });
+  await usernameInput.click();
   await usernameInput.fill(email);
   await expect(usernameInput).toHaveValue(email);
 

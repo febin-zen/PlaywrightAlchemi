@@ -10,3 +10,4 @@ tests/setup/.auth/
 # Environment
 .env
 dummy.html
+*breadcrumbs.md
