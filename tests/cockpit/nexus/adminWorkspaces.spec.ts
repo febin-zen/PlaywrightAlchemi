@@ -92,6 +92,50 @@ test.describe("Workspace Management Tests", () => {
     await adminWorkspace.expectWorkspaceNotInTable(editedName);
   });
 
+  test("Workspace renamed by User is reflected in Admin table and visible to all members ", async ({
+    adminPage,
+    userPage,
+    ownerA,
+  }) => {
+    // User creates workspace in Public Workspace
+    await adminPage.goto("/spaces");
+    await ownerA.goto("/spaces");
+    ownerWorkspace = new PublicWorkspacePage(ownerA);
+    adminWorkspace = new WorkspacePage(adminPage);
+
+    await ownerWorkspace.navigateToSpaces();
+    await ownerWorkspace.openCreateSpaceForm();
+    await ownerWorkspace.fillSpaceName(workspaceData.name);
+    await ownerWorkspace.fillDescription(workspaceData.description);
+    await ownerWorkspace.selectWorkspaceType(workspaceData.type);
+    await ownerWorkspace.submitCreateSpace();
+
+    // Verify workspace created and appears in user list
+    await ownerWorkspace.expandSidebar();
+    await ownerWorkspace.goBack();
+    await ownerWorkspace.expectOpenWorkspaceLink2(workspaceData.name);
+
+    // Admin able to see the workspace created by user in Admin Workspace table
+    await adminWorkspace.navigateToWorkspaces();
+    await adminWorkspace.expectWorkspaceInTable(workspaceData.name);
+    await adminWorkspace.expectWorkspaceExists(workspaceData.name);
+
+    // User rename workspace (performed via PublicWorkspacePage helper)
+    const editedName = `${workspaceData.name}_edited`;
+    await ownerWorkspace.renameWorkspaceByUser(workspaceData.name, editedName);
+    await ownerWorkspace.reloadPage();
+    await ownerWorkspace.expectOpenWorkspaceLink2(editedName);
+
+    // Admin able to see the workspace renamed by user in Admin Workspace table
+    await adminWorkspace.reloadPage();
+    await adminWorkspace.expectWorkspaceInTable(editedName);
+    await adminWorkspace.expectWorkspaceExists(editedName);
+
+    // Delete
+    await adminWorkspace.deleteWorkspace(editedName);
+    await adminWorkspace.expectWorkspaceNotInTable(editedName);
+  });
+
   test("Workspace archived by Admin is removed from user Spaces, appears in Archived tab", async ({
     adminPage,
     userPage,
@@ -223,7 +267,6 @@ test.describe("Workspace Management Tests", () => {
 
   test("Workspace deleted by Admin is permanently removed from all user views and Admin table", async ({
     adminPage,
-    userPage,
     ownerA,
   }) => {
     // User creates workspace in Public Workspace
@@ -269,50 +312,6 @@ test.describe("Workspace Management Tests", () => {
 
     //Admin verify in workspace table that the workspace is Not Present
     await adminWorkspace.expectWorkspaceNotInTable(workspaceData.name);
-  });
-
-  test("Workspace renamed by User is reflected in Admin table and visible to all members ", async ({
-    adminPage,
-    userPage,
-    ownerA,
-  }) => {
-    // User creates workspace in Public Workspace
-    await adminPage.goto("/spaces");
-    await ownerA.goto("/spaces");
-    ownerWorkspace = new PublicWorkspacePage(ownerA);
-    adminWorkspace = new WorkspacePage(adminPage);
-
-    await ownerWorkspace.navigateToSpaces();
-    await ownerWorkspace.openCreateSpaceForm();
-    await ownerWorkspace.fillSpaceName(workspaceData.name);
-    await ownerWorkspace.fillDescription(workspaceData.description);
-    await ownerWorkspace.selectWorkspaceType(workspaceData.type);
-    await ownerWorkspace.submitCreateSpace();
-
-    // Verify workspace created and appears in user list
-    await ownerWorkspace.expandSidebar();
-    await ownerWorkspace.goBack();
-    await ownerWorkspace.expectOpenWorkspaceLink2(workspaceData.name);
-
-    // Admin able to see the workspace created by user in Admin Workspace table
-    await adminWorkspace.navigateToWorkspaces();
-    await adminWorkspace.expectWorkspaceInTable(workspaceData.name);
-    await adminWorkspace.expectWorkspaceExists(workspaceData.name);
-
-    // User rename workspace (performed via PublicWorkspacePage helper)
-    const editedName = `${workspaceData.name}_edited`;
-    await ownerWorkspace.renameWorkspaceByUser(workspaceData.name, editedName);
-    await ownerWorkspace.reloadPage();
-    await ownerWorkspace.expectOpenWorkspaceLink2(editedName);
-
-    // Admin able to see the workspace renamed by user in Admin Workspace table
-    await adminWorkspace.reloadPage();
-    await adminWorkspace.expectWorkspaceInTable(editedName);
-    await adminWorkspace.expectWorkspaceExists(editedName);
-
-    // Delete
-    await adminWorkspace.deleteWorkspace(editedName);
-    await adminWorkspace.expectWorkspaceNotInTable(editedName);
   });
 
   test("Workspace shared by Admin is visible only to the specified user ", async ({
