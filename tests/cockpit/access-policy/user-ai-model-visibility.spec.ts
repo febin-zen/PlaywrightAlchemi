@@ -1,5 +1,5 @@
 import { test, expect } from '../../fixtures/roles.fixture';
-import { AccessPolicyPage } from '../../../pages/Cockpit/access-policy/access-policy.page';
+import { AccessPolicyPage } from '../../../pages/Cockpit/access-policy/marketplace.page';
 import { CopilotModelPage } from '../../../pages/copilot/copilot-model.page';
 import { ACCESS_POLICY_DATA } from '../../data/access.policy.testcases';
 

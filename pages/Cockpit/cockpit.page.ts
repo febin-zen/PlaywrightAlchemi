@@ -5,8 +5,8 @@ export class CockpitPage {
 
   async navigateToCockpitMenu(menuName: string) {
    await this.page.goto("/spaces");
-   await this.page.getByRole("button", { name: "Cockpit" }).click();
-   await this.page.getByRole("link", { name: menuName }).click();
+   await this.page.getByRole('button', { name: 'Cockpit' }).click();
+   await this.page.getByRole('link', { name: menuName, exact: true }).click();
   }
 
   async navigateToHome() {

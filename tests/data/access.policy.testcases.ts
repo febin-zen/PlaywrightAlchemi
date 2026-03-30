@@ -11,3 +11,9 @@ export const ACCESS_POLICY_DATA = {
 
   visibleModel: 'Model Claude Haiku'
 };
+
+export const MARKETPLACE_DATA = {
+  restrictButtonIndex: 3,
+  allowButtonIndex: 4,
+  emptyMessage: "No items available",
+};

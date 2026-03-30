@@ -17,6 +17,10 @@ export class CopilotPage {
     await this.page.getByRole('button', { name: 'Create Space' }).click();
   }
 
+  async navigateToHomeMenu(menuName: string) {
+    await this.page.getByRole('button', { name: menuName, exact: true }).click();
+  }
+
   chatInput(): Locator {
     return this.page.getByRole('textbox', {
       name: 'What would you like to work'
@@ -36,4 +40,6 @@ export class CopilotPage {
   async getCreditText(): Promise<string> {
     return (await this.creditDisplay().textContent())?.trim() || '';
   }
+
+   
 }

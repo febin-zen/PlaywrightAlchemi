@@ -73,10 +73,39 @@ export const REQUEST_CHAT_DATA = {
 };
 
 export const INTERNAL_NOTE_DATA = {
-  requestId: '2d8b1857-8bd0-4f6d-b70e-f39b3b241e89',
-  requestTitle: CREDIT_REQUEST_DATA.subject,
-  internalMessage: `Internal-${Date.now()}`,
+  requestId: '2f183fe1-b959-49a4-a612-5ea86939e62b',
+  requestTitle: "Internal Note",
+  adminMessages: {
+    internal: "Sending message from Admin",
+    editedinternal : "Editing Message from Admin"
+  },
+
+  userMessages: {
+    send: "Sending Message from User",
+    edit: "Editing Message from User"
+  }
+
 };
+
+export const SEND_EDIT_MSG = {
+
+  requestId: "c39c247b-28c3-45e8-85f9-878273ce96a2",
+
+  requestTitle: "Sending, Editing and Delete",
+
+  adminMessages: {
+    send: "Sending message from Admin",
+    edit: "Editing Message from Admin"
+  },
+
+  userMessages: {
+    send: "Sending Message from User",
+    edit: "Editing Message from User"
+  }
+
+};
+
+
 
 
 
