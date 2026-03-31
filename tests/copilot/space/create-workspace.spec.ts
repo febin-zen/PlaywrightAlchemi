@@ -1,7 +1,7 @@
-import { test, expect } from "../fixtures/roles.fixture";
-import {CopilotPage} from "../../pages/copilot/copilot.page"
-import { SpacePage } from "../../pages/copilot/space.page";
-import { CREATE_SPACE_DATA, DELETE_WORKSPACE_DATA} from "../data/copilot/marketplace.data";
+import { test, expect } from "../../fixtures/roles.fixture";
+import {CopilotPage} from "../../../pages/copilot/copilot.page"
+import { SpacePage } from "../../../pages/copilot/space.page";
+import { CREATE_SPACE_DATA, DELETE_WORKSPACE_DATA} from "../../data/copilot/space.data";
 import { describe } from "node:test";
 
 

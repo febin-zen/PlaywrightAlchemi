@@ -13,7 +13,7 @@ if (!fs.existsSync(authPath)) {
 
 async function login(page: Page, email: string, password: string) {
   await page.goto(process.env.BASE_URL + "/login");
-
+  
   const usernameInput = page.getByTestId("username-text-input");
   const passwordInput = page.getByTestId("password-text-input");
   const submitButton = page.getByTestId("submit-button");
@@ -68,7 +68,7 @@ async function login(page: Page, email: string, password: string) {
 }
 
 setup("Admin login", async ({ page }) => {
-  await login(page, process.env.ADMIN_EMAIL!, process.env.MY_PASSWORD!);
+  await login(page, process.env.ADMIN_EMAIL!, process.env.ADMIN_PASSWORD!);
 
   await page.context().storageState({
     path: path.join(authPath, "admin.json"),

@@ -1,58 +1,125 @@
 import { test, expect } from "../../fixtures/roles.fixture";
-import { MarketplacePage } from "../../../pages/Cockpit/access-policy/marketplace.page"
+import { MarketplacePage } from "../../../pages/Cockpit/access-policy/marketplace.page";
 import { MARKETPLACE_DATA } from "../../data/access.policy.testcases";
 import { CockpitPage } from "../../../pages/Cockpit/cockpit.page";
 
-test("Admin restricts marketplace → User cannot see items", 
-async ({ adminPage, userPage }) => {
+let adminMarketplace: MarketplacePage;
+let userMarketplace: MarketplacePage;
+let cockpitPage: CockpitPage;
 
-  const adminMarketplace = new MarketplacePage(adminPage);
-  const userMarketplace = new MarketplacePage(userPage);
-  const cockpitPage = new CockpitPage(adminPage);
+// ==========================================
+// 🔁 COMMON SETUP
+// ==========================================
+test.beforeEach(async ({ adminPage, userPage }) => {
+  adminMarketplace = new MarketplacePage(adminPage);
+  userMarketplace = new MarketplacePage(userPage);
+  cockpitPage = new CockpitPage(adminPage);
 
-  // ==========================================
-  // 🔐 ADMIN RESTRICTS MARKETPLACE
-  // ==========================================
-  await cockpitPage.navigateToCockpitMenu("Access Policies"); // adjust if needed
-
-  await adminMarketplace.openMarketplacePolicy();
-  await adminMarketplace.restrictMarketplace(
-    MARKETPLACE_DATA.restrictButtonIndex
-  );
-
-  // await cockpitPage.navigateToHome();
-
-  // ==========================================
-  // 👤 USER VALIDATION
-  // ==========================================
-  await userMarketplace.openMarketplace();
-
-  await expect(userMarketplace.noItemsMessage()).toBeVisible();
+  await cockpitPage.navigateToCockpitMenu("Access Policies");
 });
 
-test("Admin allow marketplace → User can see all the allowed items", 
-async ({ adminPage, userPage }) => {
+// ==========================================
+// 🧩 HELPER FUNCTIONS
+// ==========================================
+async function validateMarketplaceEmpty() {
+  await userMarketplace.openMarketplace();
+  await expect(userMarketplace.noItemsMessage()).toBeVisible();
+}
 
-  const adminMarketplace = new MarketplacePage(adminPage);
-  const userMarketplace = new MarketplacePage(userPage);
-  const cockpitPage = new CockpitPage(adminPage);
+// ==========================================
+// 🧪 TEST CASES
+// ==========================================
 
-  // ==========================================
-  // 🔐 ADMIN RESTRICTS MARKETPLACE
-  // ==========================================
-  await cockpitPage.navigateToCockpitMenu("Access Policies"); // adjust if needed
-
+test("Admin restricts marketplace → User cannot see items", async () => {
   await adminMarketplace.openMarketplacePolicy();
-  await adminMarketplace.allowMarketplace(
-    MARKETPLACE_DATA.allowButtonIndex
+  await adminMarketplace.accountLevelAccess(
+    MARKETPLACE_DATA.access.Restrict,
+    MARKETPLACE_DATA.buttonIndex[0]
   );
 
-  // await cockpitPage.navigateToHome();
+  await validateMarketplaceEmpty();
+});
+
+test("Admin allow marketplace → User can see all the allowed items", async () => {
+  await adminMarketplace.openMarketplacePolicy();
+  await adminMarketplace.accountLevelAccess(
+    MARKETPLACE_DATA.access.Allow,
+    MARKETPLACE_DATA.buttonIndex[1]
+  );
+
+  await validateMarketplaceEmpty(); // (update if behavior differs)
+});
+
+test("Admin restricts marketplace agent → User cannot find it", async ({ adminPage }) => {
+  await adminMarketplace.openAgentsSection();
+
+  await expect(
+    adminPage.getByRole("cell", {
+      name: MARKETPLACE_DATA.sectionName,
+    })
+  ).toBeVisible();
+
+  await adminMarketplace.expandAgentsRow(MARKETPLACE_DATA.sectionName);
+
+  await expect(adminPage.getByText("Copilot", { exact: true })).toBeVisible();
+
+  await adminMarketplace.selectAgent(MARKETPLACE_DATA.agentName);
+  await adminMarketplace.restrict(MARKETPLACE_DATA.agentName);
+
+  await expect(
+    adminPage.getByRole("dialog", {
+      name: MARKETPLACE_DATA.sectionName,
+    })
+  ).toBeVisible();
+
+  
+  await adminMarketplace.closeModal();
 
   // ==========================================
   // 👤 USER VALIDATION
   // ==========================================
   await userMarketplace.openMarketplace();
+  await userMarketplace.searchAgent(MARKETPLACE_DATA.agentName);
+
+  await expect(userMarketplace.noResultsText()).toBeVisible();
+  await expect(userMarketplace.emptyState()).toContainText(
+    MARKETPLACE_DATA.expectedTexts.emptyState
+  );
+});
+
+test("Admin allow marketplace agent → User can find it", async ({ adminPage }) => {
+  await adminMarketplace.openAgentsSection();
+
+  await expect(
+    adminPage.getByRole("cell", {
+      name: MARKETPLACE_DATA.sectionName,
+    })
+  ).toBeVisible();
+
+  await adminMarketplace.expandAgentsRow(MARKETPLACE_DATA.sectionName);
+
+  await expect(adminPage.getByText("Copilot", { exact: true })).toBeVisible();
+
+  await adminMarketplace.selectAgent(MARKETPLACE_DATA.agentName);
+  await adminMarketplace.allow(MARKETPLACE_DATA.agentName);
+
+  await expect(
+    adminPage.getByRole("dialog", {
+      name: MARKETPLACE_DATA.sectionName,
+    })
+  ).toBeVisible();
+
   
-  await expect(userMarketplace.noItemsMessage()).toBeVisible();
+  await adminMarketplace.closeModal();
+
+  // ==========================================
+  // 👤 USER VALIDATION
+  // ==========================================
+  await userMarketplace.openMarketplace();
+  await userMarketplace.searchAgent(MARKETPLACE_DATA.agentName);
+
+  await expect(userMarketplace.noResultsText()).toBeVisible();
+  await expect(userMarketplace.emptyState()).toContainText(
+    MARKETPLACE_DATA.expectedTexts.emptyState
+  );
 });

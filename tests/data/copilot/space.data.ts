@@ -20,7 +20,7 @@ export const DELETE_WORKSPACE_DATA = {
   expectedTexts: {
     modalTitle: "Delete Workspace Permanently",
     confirmationText: (name: string) =>
-      `Are you sure you want to permanently delete ${name}?`,
+      `Are you sure you want to permanently delete ${name}?  This will make the workspace active again and accessible to all members.`,
     warning1: "This action cannot be undone.",
     warning2: "All data in this workspace will be lost forever.",
     suggestion:
