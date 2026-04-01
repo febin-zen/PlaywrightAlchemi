@@ -2,7 +2,7 @@ import { test, expect } from "../../fixtures/roles.fixture";
 import { ArchiveWorkspacePage } from "../../../pages/copilot/archive-worskspace.page";
 import { ARCHIVE_WORKSPACE_DATA } from "../../data/copilot/archive-workspace.data";
 
-test("User restores an archived workspace successfully", async ({ adminPage }) => {
+test("User restores an archived workspace successfully.", async ({ adminPage }) => {
   const archivePage = new ArchiveWorkspacePage(adminPage);
 
   // ==========================================
@@ -34,4 +34,6 @@ test("User restores an archived workspace successfully", async ({ adminPage }) =
   await expect(archivePage.successToast()).toContainText(
     ARCHIVE_WORKSPACE_DATA.expectedTexts.restoreSuccess
   );
+
+
 });

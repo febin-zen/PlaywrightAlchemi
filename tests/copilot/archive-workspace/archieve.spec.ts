@@ -3,7 +3,7 @@ import { ArchiveWorkspacePage } from "../../../pages/copilot/archive-worskspace.
 import { ARCHIVE_WORKSPACE_DATA } from "../../data/copilot/archive-workspace.data";
 import { CopilotPage } from "../../../pages/copilot/copilot.page";
 
-test("User archives a workspace successfully", async ({ adminPage }) => {
+test("User archives a workspace successfully.", async ({ adminPage }) => {
   const archivePage = new ArchiveWorkspacePage(adminPage);
   const copilot = new CopilotPage(adminPage);
 
@@ -46,7 +46,6 @@ test("User archives a workspace successfully", async ({ adminPage }) => {
   await archivePage.searchArchiveWorkspaceItem(ARCHIVE_WORKSPACE_DATA.workspaceName);
 
  
-await expect(adminPage.getByRole('heading', { name: 'Automation' })).toBeVisible();
-  
+await expect(adminPage.getByRole('heading', { name: 'Automation' })).toBeVisible(); 
 
 });
