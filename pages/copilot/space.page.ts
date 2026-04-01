@@ -90,13 +90,3 @@ export class SpacePage {
 }
 
 
-
-
-export class DeleteWorkspacePage {
-  constructor(private page: Page) {}
-
-  // ===============================
-  // 🔹 ACTIONS
-  // ===============================
-  
-}
