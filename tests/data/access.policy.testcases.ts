@@ -13,7 +13,18 @@ export const ACCESS_POLICY_DATA = {
 };
 
 export const MARKETPLACE_DATA = {
-  restrictButtonIndex: 3,
-  allowButtonIndex: 4,
+  buttonIndex: [3,4],
+  access: {Allow: 'Allow', Restrict: "Restrict"},
   emptyMessage: "No items available",
+  sectionName: "COPILOT.MARKETPLACE.AGENTS",
+  agentName: "Copilot",
+
+  expectedTexts: {
+    noResults: "No items match your filtersClear filters",
+    emptyState: "No items match your filters",
+  },
+};
+
+export const MARKETPLACE_AGENTS_DATA = {
+ 
 };
